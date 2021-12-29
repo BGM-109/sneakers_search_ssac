@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sneakers_search_ssac/screen/search_screen.dart';
+import 'package:sneakers_search_ssac/screen/search_view_model.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +18,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const SearchScreen(),
+      home: Provider(
+          create: (_) => SearchViewModel(), child: const SearchScreen()),
     );
   }
 }

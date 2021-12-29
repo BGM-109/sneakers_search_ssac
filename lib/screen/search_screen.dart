@@ -1,8 +1,10 @@
-import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:sneakers_search_ssac/model/sneakers.dart';
+import 'package:provider/src/provider.dart';
+import 'package:sneakers_search_ssac/screen/components/category_button.dart';
 import 'package:sneakers_search_ssac/screen/components/custom_grid_tile.dart';
+import 'package:sneakers_search_ssac/screen/components/keyword_button.dart';
+import 'package:sneakers_search_ssac/screen/components/search_bar.dart';
+import 'package:sneakers_search_ssac/screen/search_view_model.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -12,57 +14,96 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  List<Sneakers> _sneakers = [];
-  final _controller = TextEditingController();
+  final List<String> _keywords = [
+    "피마원",
+    "ROLEX",
+    "CHANNEL",
+    "Jordan 1",
+    "머플러",
+    "몽클레르",
+    "Dunk",
+    "Off-White"
+  ];
 
-  Future<List<Sneakers>> fetch(String query) async {
-    String url =
-        "https://ssac-sneakes-searcher.herokuapp.com/api/search?q=$query";
-    final response = await http.get(Uri.parse(url));
-    Iterable jsonResponse = convert.jsonDecode(response.body);
-    return jsonResponse.map((s) => Sneakers.fromJson(s)).toList();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    _controller.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(),
-        body: Column(children: [
-          TextField(
-            controller: _controller,
-            decoration: InputDecoration(
-                suffixIcon: IconButton(
-                    onPressed: () async {
-                      final sneakers = await fetch(_controller.text);
-                      setState(() {
-                        _sneakers = sneakers;
-                      });
-                      print(sneakers);
-                    },
-                    icon: const Icon(Icons.search))),
+    final viewModel = context.watch<SearchViewModel>();
+    return SafeArea(
+      child: Scaffold(
+          body: Column(children: [
+        SearchBar(
+          focusNode: viewModel.focusNode,
+          controller: viewModel.controller,
+        ),
+        Container(
+          height: 100,
+          color: Colors.black,
+        ),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: const [
+              CategoryButton(text: "럭셔리"),
+              VerticalDivider(
+                width: 20,
+                thickness: 2,
+                indent: 20,
+                endIndent: 0,
+                color: Colors.black,
+              ),
+              CategoryButton(text: "스니커즈"),
+              CategoryButton(text: "의류"),
+              CategoryButton(text: "패션 잡화"),
+              CategoryButton(text: "라이프"),
+              CategoryButton(text: "테크"),
+            ],
           ),
-          Expanded(
+        ),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: _keywords
+                .map<Widget>((text) => KeywordButton(
+                      text: text,
+                    ))
+                .toList(),
+          ),
+        ),
+        const Divider(
+          thickness: 0,
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
             child: GridView.builder(
-                itemCount: _sneakers.length,
+                itemCount: viewModel.sneakers.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
                 ),
                 itemBuilder: (context, index) {
-                  final sneaker = _sneakers[index];
+                  final sneaker = viewModel.sneakers[index];
                   return CustomGridTile(
                     sneaker: sneaker,
                   );
                 }),
-          )
-        ]));
+          ),
+        )
+      ])),
+    );
   }
 }
