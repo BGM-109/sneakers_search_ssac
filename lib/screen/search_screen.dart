@@ -32,29 +32,47 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(),
-        body: Column(children: [
-          TextField(
+    return SafeArea(
+      child: Scaffold(
+          body: Column(children: [
+        Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: TextField(
+            maxLines: 1,
+            style: const TextStyle(
+                color: Colors.black, fontWeight: FontWeight.w500),
+            cursorColor: Colors.black,
+            autofocus: false,
+            keyboardType: TextInputType.text,
             controller: _controller,
             decoration: InputDecoration(
-                suffixIcon: IconButton(
-                    onPressed: () async {
-                      final sneakers = await fetch(_controller.text);
-                      setState(() {
-                        _sneakers = sneakers;
-                      });
-                      print(sneakers);
-                    },
-                    icon: const Icon(Icons.search))),
+              contentPadding: const EdgeInsets.all(12),
+              isDense: true,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(
+                  width: 0,
+                  style: BorderStyle.none,
+                ),),
+              fillColor: Colors.grey[200],
+              filled: true,
+              hintText: "브랜드명, 모델명, 모델번호 등",
+              hintStyle: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey,
+                  fontSize: 12),
+            ),
           ),
-          Expanded(
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
             child: GridView.builder(
                 itemCount: _sneakers.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
                 ),
                 itemBuilder: (context, index) {
                   final sneaker = _sneakers[index];
@@ -62,7 +80,9 @@ class _SearchScreenState extends State<SearchScreen> {
                     sneaker: sneaker,
                   );
                 }),
-          )
-        ]));
+          ),
+        )
+      ])),
+    );
   }
 }

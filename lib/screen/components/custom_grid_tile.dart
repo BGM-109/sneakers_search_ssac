@@ -11,6 +11,7 @@ class CustomGridTile extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(16)),
+        color: Colors.grey[200],
         image: DecorationImage(
             fit: BoxFit.cover, image: NetworkImage(sneaker.thumbnailUrl)),
       ),
