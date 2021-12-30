@@ -9,7 +9,7 @@ class KeywordButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = context.watch<SearchViewModel>();
+    final viewModel = context.read<SearchViewModel>();
     return InkWell(
       onTap: () {
         viewModel.getKeyword(text);

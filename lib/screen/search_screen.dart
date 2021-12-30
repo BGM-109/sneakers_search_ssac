@@ -14,27 +14,22 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  final List<String> _keywords = [
-    "피마원",
-    "ROLEX",
-    "CHANNEL",
-    "Jordan 1",
-    "머플러",
-    "몽클레르",
-    "Dunk",
-    "Off-White"
-  ];
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _focusNode.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+    _focusNode.removeListener(() {});
   }
 
   @override
@@ -44,7 +39,7 @@ class _SearchScreenState extends State<SearchScreen> {
       child: Scaffold(
           body: Column(children: [
         SearchBar(
-          focusNode: viewModel.focusNode,
+          focusNode: _focusNode,
           controller: viewModel.controller,
         ),
         Container(
@@ -55,27 +50,22 @@ class _SearchScreenState extends State<SearchScreen> {
           scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.all(8.0),
           child: Row(
-            children: const [
-              CategoryButton(text: "럭셔리"),
-              VerticalDivider(
+            children: [
+              const CategoryButton(text: "럭셔리"),
+              const VerticalDivider(
                 width: 20,
-                thickness: 2,
-                indent: 20,
-                endIndent: 0,
-                color: Colors.black,
+                thickness: 0,
               ),
-              CategoryButton(text: "스니커즈"),
-              CategoryButton(text: "의류"),
-              CategoryButton(text: "패션 잡화"),
-              CategoryButton(text: "라이프"),
-              CategoryButton(text: "테크"),
+              ...SearchViewModel.categories
+                  .map((text) => CategoryButton(text: text))
+                  .toList(),
             ],
           ),
         ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: _keywords
+            children: SearchViewModel.keywords
                 .map<Widget>((text) => KeywordButton(
                       text: text,
                     ))
@@ -85,24 +75,28 @@ class _SearchScreenState extends State<SearchScreen> {
         const Divider(
           thickness: 0,
         ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: GridView.builder(
-                itemCount: viewModel.sneakers.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 8,
+        viewModel.isLoading
+            ? const Expanded(child: Center(child: CircularProgressIndicator()))
+            : Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GridView.builder(
+                      itemCount: viewModel.sneakers.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        childAspectRatio: 1 / 1.6,
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 8,
+                        mainAxisSpacing: 8,
+                      ),
+                      itemBuilder: (context, index) {
+                        final sneaker = viewModel.sneakers[index];
+                        return CustomGridTile(
+                          sneaker: sneaker,
+                        );
+                      }),
                 ),
-                itemBuilder: (context, index) {
-                  final sneaker = viewModel.sneakers[index];
-                  return CustomGridTile(
-                    sneaker: sneaker,
-                  );
-                }),
-          ),
-        )
+              )
       ])),
     );
   }

@@ -8,13 +8,26 @@ class CustomGridTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(16)),
-        color: Colors.grey[200],
-        image: DecorationImage(
-            fit: BoxFit.cover, image: NetworkImage(sneaker.thumbnailUrl)),
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        AspectRatio(
+          aspectRatio: 1 / 1,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(8.0),
+              image: DecorationImage(image: NetworkImage(sneaker.thumbnailUrl)),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        Text(sneaker.name),
+        Text("크림 : ${sneaker.price}"),
+        Text("Stockx : "),
+      ],
     );
   }
 }

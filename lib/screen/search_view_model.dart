@@ -4,25 +4,47 @@ import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
 class SearchViewModel with ChangeNotifier {
+  static final List<String> keywords = [
+    "피마원",
+    "ROLEX",
+    "CHANNEL",
+    "Jordan 1",
+    "머플러",
+    "몽클레르",
+    "Dunk",
+    "Off-White"
+  ];
+  static final List<String> categories = [
+    "스니커즈",
+    "의류",
+    "패션잡화",
+    "라이프",
+    "테크",
+  ];
   String _currentKeyword = '';
   List<Sneakers> _sneakers = [];
+  bool _isLoading = false;
+  bool isFilter = false;
 
   final TextEditingController _controller = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
+
+  bool get isLoading => _isLoading;
 
   TextEditingController get controller => _controller;
-  FocusNode get focusNode => _focusNode;
 
   List<Sneakers> get sneakers => _sneakers;
 
-  void getKeyword(String text) {
+  void getKeyword(String text) async {
     _currentKeyword = text;
     _controller.text = _currentKeyword;
-    getData(_currentKeyword);
+    _isLoading = true;
+    notifyListeners();
+    await getData(_currentKeyword);
+    _isLoading = false;
     notifyListeners();
   }
 
-  void getData(String query) async {
+  Future getData(String query) async {
     _sneakers = await fetch(query);
   }
 
@@ -30,7 +52,8 @@ class SearchViewModel with ChangeNotifier {
     String url =
         "https://ssac-sneakes-searcher.herokuapp.com/api/search?q=$query";
     final response = await http.get(Uri.parse(url));
-    Iterable jsonResponse = convert.jsonDecode(response.body);
+    Iterable jsonResponse =
+        convert.jsonDecode(convert.utf8.decode(response.bodyBytes));
     return jsonResponse.map((s) => Sneakers.fromJson(s)).toList();
   }
 }
