@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
+import 'package:sneakers_search_ssac/screen/search_view_model.dart';
 
 class SearchBar extends StatelessWidget {
   const SearchBar({
@@ -12,12 +14,17 @@ class SearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.read<SearchViewModel>();
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Row(
         children: [
           Expanded(
             child: TextField(
+              textInputAction: TextInputAction.search,
+              onSubmitted: (String text){
+                viewModel.getSearch(text);
+              },
               focusNode: focusNode,
               maxLines: 1,
               style: const TextStyle(
@@ -36,6 +43,7 @@ class SearchBar extends StatelessWidget {
                     style: BorderStyle.none,
                   ),
                 ),
+
                 fillColor: Colors.grey[200],
                 filled: true,
                 hintText: "브랜드명, 모델명, 모델번호 등",

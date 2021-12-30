@@ -34,6 +34,14 @@ class SearchViewModel with ChangeNotifier {
 
   List<Sneakers> get sneakers => _sneakers;
 
+  void getSearch(String query) async {
+    _isLoading = true;
+    notifyListeners();
+    await getData(query);
+    _isLoading = false;
+    notifyListeners();
+  }
+
   void getKeyword(String text) async {
     _currentKeyword = text;
     _controller.text = _currentKeyword;
