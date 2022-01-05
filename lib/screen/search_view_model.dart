@@ -22,6 +22,7 @@ class SearchViewModel with ChangeNotifier {
     "테크",
   ];
   String _currentKeyword = '';
+  String _currentFilter = '';
   List<Sneakers> _sneakers = [];
   bool _isLoading = false;
   bool isFilter = false;
@@ -30,9 +31,20 @@ class SearchViewModel with ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
+  get currentFilter => _currentFilter;
+
   TextEditingController get controller => _controller;
 
   List<Sneakers> get sneakers => _sneakers;
+
+  void getFilter(String filter) {
+    if (_currentFilter == filter) {
+      _currentFilter = '';
+    } else {
+      _currentFilter = filter;
+    }
+    notifyListeners();
+  }
 
   void getSearch(String query) async {
     _isLoading = true;

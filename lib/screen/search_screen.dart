@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
 import 'package:sneakers_search_ssac/screen/components/category_button.dart';
+import 'package:sneakers_search_ssac/screen/components/category_button_icon.dart';
 import 'package:sneakers_search_ssac/screen/components/custom_grid_tile.dart';
 import 'package:sneakers_search_ssac/screen/components/keyword_button.dart';
+import 'package:sneakers_search_ssac/screen/components/my_banner.dart';
 import 'package:sneakers_search_ssac/screen/components/search_bar.dart';
 import 'package:sneakers_search_ssac/screen/search_view_model.dart';
 
@@ -42,15 +44,13 @@ class _SearchScreenState extends State<SearchScreen> {
           focusNode: _focusNode,
           controller: viewModel.controller,
         ),
-        Container(
-          height: 100,
-          color: Colors.black,
-        ),
+        MyBanner(),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
+              const CategoryButtonIcon(),
               const CategoryButton(text: "럭셔리"),
               const VerticalDivider(
                 width: 20,

@@ -25,8 +25,7 @@ class CustomGridTile extends StatelessWidget {
           height: 8,
         ),
         Text(sneaker.name),
-        Text("크림 : ${sneaker.price}"),
-        Text("Stockx : "),
+        
       ],
     );
   }
