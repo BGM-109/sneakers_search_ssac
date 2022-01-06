@@ -22,7 +22,7 @@ class SearchBar extends StatelessWidget {
           Expanded(
             child: TextField(
               textInputAction: TextInputAction.search,
-              onSubmitted: (String text){
+              onSubmitted: (String text) {
                 viewModel.getSearch(text);
               },
               focusNode: focusNode,
@@ -34,6 +34,13 @@ class SearchBar extends StatelessWidget {
               keyboardType: TextInputType.text,
               controller: controller,
               decoration: InputDecoration(
+                suffixIcon: (controller.text.isNotEmpty && focusNode.hasFocus)
+                    ? IconButton(
+                        onPressed: () {
+                          viewModel.clearKeyword();
+                        },
+                        icon: const Icon(Icons.clear))
+                    : null,
                 contentPadding: const EdgeInsets.all(12),
                 isDense: true,
                 border: OutlineInputBorder(
@@ -43,7 +50,6 @@ class SearchBar extends StatelessWidget {
                     style: BorderStyle.none,
                   ),
                 ),
-
                 fillColor: Colors.grey[200],
                 filled: true,
                 hintText: "브랜드명, 모델명, 모델번호 등",

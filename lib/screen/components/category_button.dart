@@ -13,14 +13,7 @@ class CategoryButton extends StatefulWidget {
 }
 
 class _CategoryButtonState extends State<CategoryButton> {
-  bool _isPressed = false;
-  List<Map<Category, String>> converter = [
-    {Category.sneakers: "스니커즈"},
-    {Category.clothes: "의류"},
-    {Category.acc: "패션잡화"},
-    {Category.life: "라이프"},
-    {Category.tech: "테크"},
-  ];
+
 
   @override
   Widget build(BuildContext context) {
